@@ -14,8 +14,9 @@ namespace myWindAPI
         /// <summary>
         /// 未指定数据库名称的连接字符串
         /// </summary>
-        public string orignalConnectString = "server=(local);database=;Integrated Security=true;";
-        //public string orignalConnectString = "server=192.168.38.217;database=;uid =sa;pwd=maoheng0;";
+        //public string orignalConnectString = "server=(local);database=;Integrated Security=true;";
+        public string orignalConnectString = "server=192.168.38.217;database=;uid =sa;pwd=maoheng0;";
+        //public string orignalConnectString = "server=145.146.30.152;uid =spqhhqld;pwd=spqhhqld;";
         /// <summary>
         /// 连接万德商品期货TDB数据库的参数。
         /// </summary>
@@ -109,8 +110,9 @@ namespace myWindAPI
                     }
                     int yesterday = TradeDays.GetPreviousTradeDay(today);
                     string todayDataBase = "TradeMarket" + (today / 100).ToString();
-                    string todayConnectString = "server=(local);database=" + todayDataBase + ";Integrated Security=true;";
-                   // string todayConnectString = "server=192.168.38.217;database=" + todayDataBase + ";uid =sa;pwd=maoheng0;";
+                    //string todayConnectString = "server=(local);database=" + todayDataBase + ";Integrated Security=true;";
+                     string todayConnectString = "server=192.168.38.217;database=" + todayDataBase + ";uid =sa;pwd=maoheng0;";
+                    //string todayConnectString = "server=145.146.30.152;database=" + todayDataBase + ";uid =spqhhqld;pwd=spqhhqld;";
                     if (SqlApplication.CheckDataBaseExist(todayDataBase,orignalConnectString)==false)
                     {
                         maxRecordDate = 0;
@@ -356,7 +358,9 @@ namespace myWindAPI
                     }
                     catch (Exception myerror)
                     {
+                        //记录错误信息
                         System.Console.WriteLine(myerror.Message);
+                        MyApplication.TxtWrite(logName, myerror.Message);
                     }
                 }
                 conn.Close();
@@ -402,7 +406,7 @@ namespace myWindAPI
                 myShotList[i].lp = future.m_nLow / 10000.0;
                 myShotList[i].OpenInterest = future.m_nPosition;
                 myShotList[i].PreOpenInterest = future.m_nPrePosition;
-                if (time<160000000 && time>80000000)//该数据根据日盘夜盘的分割来调整
+                if (time<160000000 && time>60000000)//该数据根据日盘夜盘的分割来调整
                 {
                     myShotList[i].TradeStatus = "001";
                 }
@@ -496,7 +500,7 @@ namespace myWindAPI
             {
                 conn.Open();//打开数据库  
                 SqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "CREATE TABLE [dbo].["+tableName+ "]([marketdataid][int] IDENTITY(1, 1) NOT NULL,[id] [int] NOT NULL,[stkcd] [char](11) NOT NULL,[tdate] [char](8) NOT NULL,[ndate] [char](8) NOT NULL,[ttime] [char](9) NOT NULL,[cp] [decimal](9, 4) NULL,[S1] [decimal](9, 4) NULL,[S2] [decimal](9, 4) NULL,[S3] [decimal](9, 4) NULL,[S4] [decimal](9, 4) NULL,[S5] [decimal](9, 4) NULL,[S6] [decimal](9, 4) NULL,[S7] [decimal](9, 4) NULL,[S8] [decimal](9, 4) NULL,	[S9] [decimal](9, 4) NULL,[S10] [decimal](9, 4) NULL,[B1] [decimal](9, 4) NULL,[B2] [decimal](9, 4) NULL,	[B3] [decimal](9, 4) NULL,[B4] [decimal](9, 4) NULL,[B5] [decimal](9, 4) NULL,[B6] [decimal](9, 4) NULL,	[B7] [decimal](9, 4) NULL,[B8] [decimal](9, 4) NULL,[B9] [decimal](9, 4) NULL,[B10] [decimal](9, 4) NULL,	[SV1] [decimal](10, 0) NULL,[SV2] [decimal](10, 0) NULL,[SV3] [decimal](10, 0) NULL,[SV4] [decimal](10, 0) NULL,[SV5] [decimal](10, 0) NULL,[SV6] [decimal](10, 0) NULL,[SV7] [decimal](10, 0) NULL,[SV8] [decimal](10, 0) NULL,[SV9] [decimal](10, 0) NULL,[SV10] [decimal](10, 0) NULL,[BV1] [decimal](10, 0) NULL,[BV2] [decimal](10, 0) NULL,[BV3] [decimal](10, 0) NULL,[BV4] [decimal](10, 0) NULL,[BV5] [decimal](10, 0) NULL,[BV6] [decimal](10, 0) NULL,[BV7] [decimal](10, 0) NULL,[BV8] [decimal](10, 0) NULL,[BV9] [decimal](10, 0) NULL,[BV10] [decimal](10, 0) NULL,[hp] [decimal](9, 4) NULL,[lp] [decimal](9, 4) NULL,[HighLimit] [decimal](9, 4) NULL,[LowLimit]   [decimal](9, 4) NULL,[ts] [decimal](20, 0) NULL,[tt] [decimal](20, 3) NULL,[OPNPRC] [decimal](9, 4) NULL,	[PRECLOSE] [decimal](9, 4) NULL,[Settle] [decimal](9, 4) NULL,[PrevSettle] [decimal](9, 4) NULL,[CurrDelta]    [int] NULL,[PreDelta] [int] NULL,[OpenInterest] [int] NULL,[PreOpenInterest] [int] NULL,[LocalRecTime]        [char](9) NULL,[TradeStatus] [char](3) NULL,CONSTRAINT[PK_" + tableName + "] PRIMARY KEY NONCLUSTERED([marketdataid] ASC) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON[PRIMARY]) ON [PRIMARY] CREATE CLUSTERED INDEX[IX_" + tableName + "_TDATE] ON[dbo].[" + tableName + "]([tdate] ASC,[id] ASC)WITH(PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON[PRIMARY]";
+                cmd.CommandText = "CREATE TABLE [dbo].["+tableName+ "]([marketdataid][int] IDENTITY(1, 1) NOT NULL,[id] [int] NOT NULL,[stkcd] [char](11) NOT NULL,[tdate] [char](8) NOT NULL,[ndate] [char](8) NOT NULL,[ttime] [char](9) NOT NULL,[cp] [decimal](12,3) NULL,[S1] [decimal](12,3) NULL,[S2] [decimal](12,3) NULL,[S3] [decimal](12,3) NULL,[S4] [decimal](12,3) NULL,[S5] [decimal](12,3) NULL,[S6] [decimal](12,3) NULL,[S7] [decimal](12,3) NULL,[S8] [decimal](12,3) NULL,	[S9] [decimal](12,3) NULL,[S10] [decimal](12,3) NULL,[B1] [decimal](12,3) NULL,[B2] [decimal](12,3) NULL,	[B3] [decimal](12,3) NULL,[B4] [decimal](12,3) NULL,[B5] [decimal](12,3) NULL,[B6] [decimal](12,3) NULL,	[B7] [decimal](12,3) NULL,[B8] [decimal](12,3) NULL,[B9] [decimal](12,3) NULL,[B10] [decimal](12,3) NULL,	[SV1] [decimal](10, 0) NULL,[SV2] [decimal](10, 0) NULL,[SV3] [decimal](10, 0) NULL,[SV4] [decimal](10, 0) NULL,[SV5] [decimal](10, 0) NULL,[SV6] [decimal](10, 0) NULL,[SV7] [decimal](10, 0) NULL,[SV8] [decimal](10, 0) NULL,[SV9] [decimal](10, 0) NULL,[SV10] [decimal](10, 0) NULL,[BV1] [decimal](10, 0) NULL,[BV2] [decimal](10, 0) NULL,[BV3] [decimal](10, 0) NULL,[BV4] [decimal](10, 0) NULL,[BV5] [decimal](10, 0) NULL,[BV6] [decimal](10, 0) NULL,[BV7] [decimal](10, 0) NULL,[BV8] [decimal](10, 0) NULL,[BV9] [decimal](10, 0) NULL,[BV10] [decimal](10, 0) NULL,[hp] [decimal](12,3) NULL,[lp] [decimal](12,3) NULL,[HighLimit] [decimal](12,3) NULL,[LowLimit]   [decimal](12,3) NULL,[ts] [decimal](20, 0) NULL,[tt] [decimal](20, 3) NULL,[OPNPRC] [decimal](12,3) NULL,	[PRECLOSE] [decimal](12,3) NULL,[Settle] [decimal](12,3) NULL,[PrevSettle] [decimal](12,3) NULL,[CurrDelta]    [int] NULL,[PreDelta] [int] NULL,[OpenInterest] [int] NULL,[PreOpenInterest] [int] NULL,[LocalRecTime]        [char](9) NULL,[TradeStatus] [char](3) NULL,CONSTRAINT[PK_" + tableName + "] PRIMARY KEY NONCLUSTERED([marketdataid] ASC) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON[PRIMARY]) ON [PRIMARY] CREATE CLUSTERED INDEX[IX_" + tableName + "_TDATE] ON[dbo].[" + tableName + "]([tdate] ASC,[id] ASC)WITH(PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON[PRIMARY]";
                 try
                 {
                     cmd.ExecuteReader();
