@@ -18,11 +18,11 @@ namespace myWindAPI
         public string orignalConnectString = "server=(local);database=;Integrated Security=true;";
         //public string orignalConnectString = "server=192.168.38.217;database=;uid =sa;pwd=maoheng0;";
         /// <summary>
-        /// 连接万德商品期货TDB数据库的参数。
+        /// 连接万德上交所TDB数据库的参数。
         /// </summary>
         public TDBsource mySource = new TDBsource("114.80.154.34", "10061", "TD5928909016", "14158777");
         /// <summary>
-        /// 记录全市场商品期货信息的列表。
+        /// 记录全市场期权信息的列表。
         /// </summary>
         public List<ETFOptionFormat> ETFOptionList = new List<ETFOptionFormat>();
         /// <summary>
@@ -554,7 +554,7 @@ namespace myWindAPI
         }
 
         /// <summary>
-        /// 获取商品期货列表的信息。
+        /// 获取期权列表的信息。
         /// </summary>
         /// <param name="market">市场</param>
         /// <returns>商品期货信息列表</returns>

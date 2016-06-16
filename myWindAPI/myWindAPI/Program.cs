@@ -93,11 +93,12 @@ namespace myWindAPI
     {
         static void Main(string[] args)
         {
-            CommodityFutures myStore1 = new CommodityFutures("DCE", 20130401, 20130430);
-            CommodityFutures myStore2 = new CommodityFutures("CZC", 20130401, 20130430);
-            CommodityFutures myStore3 = new CommodityFutures("SHF", 20130401, 20130430);
-            TreasuryBondFutures myStore4 = new TreasuryBondFutures("CF", 20130401, 20160430);
+            //CommodityFutures myStore1 = new CommodityFutures("DCE", 20130401, 20130430);
+            //CommodityFutures myStore2 = new CommodityFutures("CZC", 20130401, 20130430);
+            //CommodityFutures myStore3 = new CommodityFutures("SHF", 20130401, 20130430);
+            //TreasuryBondFutures myStore4 = new TreasuryBondFutures("CF", 20130401, 20160430);
             //ETFOption myStore5 = new ETFOption("SH", 20150209, 20151231);
+            Stocks myStore6 = new Stocks("SH", 20160101, 20160615);
         }
     }
 }
