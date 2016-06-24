@@ -15,8 +15,9 @@ namespace myWindAPI
         /// <summary>
         /// 未指定数据库名称的连接字符串
         /// </summary>
-        public string orignalConnectString = "server=(local);database=;Integrated Security=true;";
-        //public string orignalConnectString = "server=192.168.38.217;database=;uid =sa;pwd=maoheng0;";
+       // public string orignalConnectString = "server=(local);database=;Integrated Security=true;";
+      //  public string orignalConnectString = "server=192.168.38.217;database=;uid =sa;pwd=maoheng0;";
+        public string orignalConnectString = "server=192.168.38.209;database=;uid =sa;pwd=280514;";
         /// <summary>
         /// 连接上交所TDB数据库的参数。
         /// </summary>
@@ -105,7 +106,8 @@ namespace myWindAPI
                     int yesterday = TradeDays.GetPreviousTradeDay(today);
                     string todayDataBase = "TradeMarket" + (today / 100).ToString();
                     //string todayConnectString = "server=192.168.38.217;database=" + todayDataBase + ";uid =sa;pwd=maoheng0;";
-                    string todayConnectString = "server=(local);database=" + todayDataBase + ";Integrated Security=true;";
+                    //string todayConnectString = "server=(local);database=" + todayDataBase + ";Integrated Security=true;";
+                    string todayConnectString = "server=192.168.38.209;database=" + todayDataBase + ";uid =sa;pwd=280514;";
                     if (SqlApplication.CheckDataBaseExist(todayDataBase, orignalConnectString) == false)
                     {
                         maxRecordDate = 0;
@@ -457,7 +459,7 @@ namespace myWindAPI
             {
                 conn.Open();//打开数据库  
                 SqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "CREATE DATABASE " + dataBaseName + " ON PRIMARY (NAME = '" + dataBaseName + "', FILENAME = 'G:\\" + dataBaseName + ".dbf',SIZE = 1024MB,MaxSize = 512000MB,FileGrowth = 1024MB) LOG ON (NAME = '" + dataBaseName + "Log',FileName = 'G:\\" + dataBaseName + ".ldf',Size = 20MB,MaxSize = 1024MB,FileGrowth = 10MB)";
+                cmd.CommandText = "CREATE DATABASE " + dataBaseName + " ON PRIMARY (NAME = '" + dataBaseName + "', FILENAME = 'E:\\HFDB\\" + dataBaseName + ".dbf',SIZE = 1024MB,MaxSize = 512000MB,FileGrowth = 1024MB) LOG ON (NAME = '" + dataBaseName + "Log',FileName = 'E:\\HFDB\\" + dataBaseName + ".ldf',Size = 20MB,MaxSize = 1024MB,FileGrowth = 10MB)";
                 try
                 {
                     cmd.ExecuteReader();
@@ -512,19 +514,27 @@ namespace myWindAPI
         public List<stockFormat> GetStockList(string indexName)
         {
             List<stockFormat> myList = new List<stockFormat>();
-            //按日期遍历，添加期权信息。
+            //按日期遍历，添加股票信息。
             WindAPI w = new WindAPI();
             w.start();
-            WindData wd = w.wset("sectorconstituent", "date=2016-06-16;windcode="+indexName);
-            object[] stockList = wd.data as object[];
-            int num = stockList.Length / 3;
-            for (int i = 0; i < num; i++)
+            string[] dateStr = { "2013-06-01","2013-12-01","2014-06-01", "2014-12-01", "2015-06-01", "2015-12-01", "2016-06-01", "2016-06-20" };
+            foreach (var item in dateStr)
             {
-                stockFormat myStock = new stockFormat();
-                myStock.market = "SH";
-                myStock.code =Convert.ToString(stockList[i * 3 + 1]).Substring(0,6);
-                myStock.name =(string)stockList[i * 3 + 2];
-                myList.Add(myStock);
+                WindData wd = w.wset("sectorconstituent", "date="+item+";windcode=" + indexName);
+                object[] stockList = wd.data as object[];
+                int num = stockList.Length / 3;
+                for (int i = 0; i < num; i++)
+                {
+                    stockFormat myStock = new stockFormat();
+                    myStock.market = "SH";
+                    myStock.code = Convert.ToString(stockList[i * 3 + 1]).Substring(0, 6);
+                    myStock.name = (string)stockList[i * 3 + 2];
+                    if (myList.Contains(myStock) == false)
+                    {
+                        myList.Add(myStock);
+                    }
+
+                }
             }
             w.stop();
             return myList;
